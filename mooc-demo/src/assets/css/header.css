@@ -1,0 +1,19 @@
+.log-reg>span:hover{
+    color:#00AD4D;
+    cursor: pointer;
+}
+#menu-content{
+    display: flex;
+    display: -webkit-flex;
+    flex-flow:row wrap;
+    justify-content: flex-start;
+}
+#menu-content li {
+    display: inline-block;
+    border-radius: 24px;
+    line-height: 34px;
+    margin:5px;
+    width:16%;
+    text-align: center;
+    background-color:rgba(0,0,0,0.04);
+}

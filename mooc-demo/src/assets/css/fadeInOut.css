@@ -1,0 +1,47 @@
+#FadeInOut>div:first-child{
+    width:776px;
+    height:360px;
+    float: left;
+    position:relative;
+}
+ #FadeInOut img{
+     position: absolute;
+     left:0;
+     opacity: 0;
+     transition: opacity .4s;
+ }
+ #FadeInOut>div:last-child{
+    width: 424px;
+    height: 360px;
+    float:right;
+    padding:2% 2% 2% 7%;
+    transition: all .4s;
+ }
+ .InOut-box ul{
+    padding:20px 0;
+    display: flex;
+    display: -webkit-flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    background: rgba(0,0,0,0.6);
+ }
+ .InOut-box li{
+    position: relative;
+    width:70%;
+    text-align: left;
+    padding-left:12%;
+    height: 20px;
+    color:rgb(184,184,184);
+    margin-bottom: 16px;
+    text-overflow: ellipsis;
+    font-size: 14px;
+    font-weight: 400;
+    overflow: hidden;
+    white-space: nowrap;
+ }
+ .InOut-box li i{
+    position: absolute;
+    left:16px;
+    font-size:16px;
+    top:1px;
+ }

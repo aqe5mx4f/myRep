@@ -1,0 +1,27 @@
+.log-reg-dialog{
+    margin-top:-27px;
+}
+.el-dialog__header{
+    padding:0;
+}
+.TabFilter{
+    font-size: 21px;
+    width:80%;
+    height:38px;
+    line-height: 36px;
+    margin:0 auto;
+    color:#333;
+}
+.TabFilter>span{
+    width:50%;
+}
+.TabFilter>span:first-child{
+    float:left;
+}
+.TabFilter>span+span{
+    float:right;
+}
+.login,.register{
+    margin-top:28px;
+    padding:0 calc(2% + 67px) 0 2%;
+}
