@@ -289,11 +289,11 @@ router.post('/',(req,res)=>{
                         pCategory:toCate[i].pCate,
                         sCategory:toCate[i].sCate[j],
                         courseSummary:courseSummList[index%2],
-                        courseInfo:{
-                            1:{
+                        courseInfo:[
+                            {
                                 main_teacher:obj[i][j][k].teacher
                             }
-                        },
+                        ],
                         img:url+toStr[i]+'/'+obj[i][j][k].img
                     }).then(d=>{})
                         .catch(e=>{console.log(e);console.log(i,j,k);});

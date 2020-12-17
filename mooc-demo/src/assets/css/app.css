@@ -1,6 +1,10 @@
 #header .el-submenu__title,#header .el-menu.el-menu--horizontal{
   border:none!important;
 }
+@font-face{
+  font-family: 'fangbiao';
+  src:url('../font/fangbiao.ttf') format('truetype');
+}
 #app>a{
     text-decoration: none;
 }

@@ -34,9 +34,9 @@
                                 <a><span>国家精品</span></a>
                             </div>
                             <div class="schedule" style="width:88%;backgroundColor:#f5f5f5;padding:10px 20px 10px;margin-top:10px;color:#666;text-align:left;">
-                                <p style="color:#333;line-height:32px;font-size:14px;">第{{lessInfo.courseTime}}次开课</p>
-                                <p style="width:100%;">开课时间：<span>{{lessInfo.starttime}}</span>~<span>{{lessInfo.endtime}}</span><span style="textAlign:right;color:red;float:right;color:#00C758;">进行至第{{lessInfo.progress}}周，共{{lessInfo.lesssonDuring}}课</span></p>
-                                <p>学时安排：<span>{{lessInfo.hourPerWeek}}</span>小时每周</p>
+                                <p style="color:#333;line-height:32px;font-size:14px;">第{{lessInfo.courseInfo[courseTime-1]}}次开课</p>
+                                <p style="width:100%;">开课时间：<span>{{lessInfo.courseInfo[courseTime-1].starttime}}</span>~<span>{{lessInfo.courseInfo[courseTime-1].endtime}}</span><span style="textAlign:right;color:red;float:right;color:#00C758;">进行至第{{lessInfo.courseInfo[courseTime-1].progress}}周，共{{lessInfo.courseInfo[courseTime-1].lesssonDuring}}课</span></p>
+                                <p>学时安排：<span>{{lessInfo.courseInfo[courseTime-1].hourPerWeek}}</span>小时每周</p>
                             </div>
                             <div class="hot"><span>已有{{lessInfo.hot}}人参加</span></div>
                             <div class="join-lesson">立即参加</div>
