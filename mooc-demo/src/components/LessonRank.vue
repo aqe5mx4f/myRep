@@ -69,7 +69,6 @@
 <script>
 export default {
     name:"LessonRank",
-    components:{},
     data(){
         return{
             LessonRank:{

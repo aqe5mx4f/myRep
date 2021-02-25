@@ -8,17 +8,20 @@
         <el-row style="height:364px;width:1200px;margin:0 auto;">
           <el-col :span="5" style="height:364px;position:relative;background:rgba(255,255,255,1)">
             <ul :style="hover?'':'height:340px;overflow:hidden;'" class="in-out" @mouseleave="hover=false">
-              <li v-for="(e,i) in cateCourse.category" :key="i">
+              <li v-for="(e,i) in cateCourse" :key="i" class="UpToHide">
                 <!-- <a :href="e.href"><strong>{{e.title}}</strong></a> -->
-                <router-link :to="'/Channel/'+(i+'-'+'0')"><strong>{{e.title}}</strong></router-link>
-                <span v-for="(item,index) in e.children" :key="index">
-                  <!-- <a :href="item.href">{{item.content}}</a><span v-if="index<(e.children.length-1)">/</span> -->
-                  <router-link :to="'/Channel/'+(i+'-'+(index+1))">{{item.content}}</router-link><span v-if="index<(e.children.length-1)">/</span>
+                <span class="cha-tab-p">
+                  <router-link :to="'/Channel/'+(i+'-'+'0'+'-'+encodeURI(encodeURI(e.title)))" target="_blank">{{e.title}}</router-link>
+                </span>
+                <span class="cha-tab-c" v-if="!(e.channel==0)">
+                  <span v-for="(item,index) in e.list" :key="index">
+                    <!-- <a :href="item.href">{{item.content}}</a><span v-if="index<(e.children.length-1)">/</span> -->
+                    <router-link :to="'/Channel/'+((i)+'-'+(index+1)+'-'+encodeURI(encodeURI(e.title)))" target="_blank">{{item}}</router-link><span v-if="index<(e.list.length-1)">/</span>
+                </span>
                 </span>
               </li>
             </ul>
-            <p v-if="!hover" style="padding:0 15px;text-align:left;position:absolute;top:calc(100% - 20px);width:100%;z-index:3;" @mouseover="hover=true">更多<i class="el-icon-arrow-down"></i></p>
-            <p>人质</p>
+            <p v-if="!hover" style="padding:0 12px;text-align:left;position:absolute;top:calc(100% - 20px);width:100%;z-index:3;" @mouseover="hover=true">更多<i class="el-icon-arrow-down"></i></p>
           </el-col>
           <el-col :span="14"  style="height:360px;margin:0 2.06665%;">
             <el-carousel trigger="click" height="360px;">
@@ -44,7 +47,7 @@
             <div style="margin:30px;">
               <img src="../assets/login.png" alt="">
             </div>
-            <el-button type="success" round style="width:77%;">登录/注册</el-button>
+            <el-button type="success" round style="width:77%;" @click="GoToLoign();">登录/注册</el-button>
             <p style="font-size:12px;position:absolute;top:calc(100% - 35px);color:rgb(153,153,153);width:100%;">网易和高等教育出版社出品</p>
           </el-col>
         </el-row>
@@ -102,6 +105,9 @@
 <script>
 import LessonRank from '../components/LessonRank'
 import Header from '../components/Header'
+import request from '../api/index'
+import {mapMutations,mapState} from 'vuex';
+const PostChannelAll = request.PostChannelAll;
 export default {
   name: 'Dashboard',
   components:{
@@ -111,292 +117,7 @@ export default {
   data () {
     return {
       input:"",
-      cateCourse:{
-        category:[
-          {
-          title:"国家精品",
-          url:""
-          },
-          {
-            title:"计算机",
-            url:"",
-            children:[
-              {
-              content:"前沿技术",
-              url:""
-              },
-              {
-              content:"软件工程",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"外语",
-            url:"",
-            children:[
-              {
-              content:"听力/口语",
-              url:""
-              },
-              {
-              content:"写作翻译",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"理学",
-            url:"",
-            children:[
-              {
-              content:"数学",
-              url:""
-              },
-              {
-              content:"物理",
-              url:""
-              },
-              {
-              content:"化学",
-              url:""
-              },
-              {
-              content:"天文学",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"工学",
-            url:"",
-            children:[
-              {
-              content:"力学",
-              url:""
-              },
-              {
-              content:"材料",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"22考研",
-            url:"",
-            children:[
-              {
-              content:"数学",
-              url:""
-              },
-              {
-              content:"唐迟英语",
-              url:""
-              },
-              {
-              content:"408计算机",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"期末不挂科",
-            url:"",
-            children:[
-              {
-              content:"高数不挂科",
-              url:""
-              },
-              {
-              content:"物理不挂科",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"应试英语",
-            url:"",
-            children:[
-              {
-              content:"四六级",
-              url:""
-              },
-              {
-              content:"万词班",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"实用英语",
-            url:""
-          },
-          {
-            title:"经济管理",
-            url:"",
-            children:[
-              {
-              content:"经济",
-              url:""
-              },
-              {
-              content:"金融",
-              url:""
-              },
-              {
-              content:"电商",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"心理学",
-            url:""
-          },
-          {
-            title:"文史哲",
-            url:"",
-            children:[
-              {
-              content:"文学文化",
-              url:""
-              },
-              {
-              content:"新闻传播",
-              url:""
-              },
-              {
-              content:"电商",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"艺术设计",
-            url:"",
-            children:[
-              {
-              content:"艺术学",
-              url:""
-              },
-              {
-              content:"美术学",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"医药卫生",
-            url:"",
-            children:[
-              {
-              content:"基础医学",
-              url:""
-              },
-              {
-              content:"临床医学",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"教育教学",
-            url:"",
-            children:[
-              {
-              content:"教育方法",
-              url:""
-              },
-              {
-              content:"教育能力",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"法学",
-            url:"",
-            children:[
-              {
-              content:"法学",
-              url:""
-              },
-              {
-              content:"思政",
-              url:""
-              },
-              {
-              content:"社会",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"农林园艺",
-            url:"",
-            children:[
-              {
-              content:"植物",
-              url:""
-              },
-              {
-              content:"动物",
-              url:""
-              },
-              {
-              content:"生态",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"音乐与舞蹈",
-            url:""
-          },
-          {
-            title:"21考研",
-            url:"",
-            children:[
-              {
-              content:"数学",
-              url:""
-              },
-              {
-              content:"孔昱力政治",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"考证就业",
-            url:"",
-            children:[
-              {
-              content:"公务员考试",
-              url:""
-              },
-              {
-              content:"办公",
-              url:""
-              }
-            ]
-          },
-          {
-            title:"名师专栏",
-            url:"",
-            children:[
-              {
-              content:"热门专栏",
-              url:""
-              },
-              {
-              content:"情商",
-              url:""
-              }
-            ]
-          },
-        ]
-      },
+      cateCourse:{},
       ImageGroup:{
         content:["../assets/Fadein-out/one.png","../assets/Fadein-out/two.jpg","../assets/Fadein-out/three.png","../assets/Fadein-out/four.png","../assets/Fadein-out/five.png"]
       },
@@ -724,13 +445,24 @@ export default {
       }
     }
   },
+  methods:{
+    // ...mapMutations(['loadInfo','toggleLogin'])
+    GoToLoign(){
+      this.$store.commit('toggleLogin',true);
+    }
+  },
   computed:{
   },
-  
-  watch:{
-  },
-  methods:{
-    
+  mounted(){
+      PostChannelAll()
+      .then(res=>{
+          if(res.data.code==1){
+            this.cateCourse=res.data.data;
+          }
+      }).catch(e=>{
+        console.log('dashboard-mounted-PostChannelTab():error');
+        console.log(e);
+      })
   }
 }
 </script>
@@ -762,12 +494,14 @@ ul.in-out{
   z-index: 2;
   background-color: rgba(255,255,255,1);
   padding:6px 0 0;
+  width:100%;
 }
 ul.in-out li{
   text-align:left;
-  padding:0 0 0 15px;
+  padding:0 12px;
   overflow: hidden;
-  height:28px;
+  height:34px;
+  line-height:34px;
 }
 ul.in-out li a{
   line-height: 28px;
@@ -783,9 +517,20 @@ ul.in-out li a+a{
   opacity: 0.6;
   font-size:13px;
 }
-ul.in-out li:hover{
-  background: rgba(0, 199, 88, 0.1);
+ul.in-out li:hover>span{
   color: rgb(0, 199, 88);
+}
+ul.in-out span.cha-tab-p{
+  font-size: 14px;
+  font-weight: 500;
+  color: rgb(51, 51, 51);
+  margin-right:8px;
+}
+ul.in-out span.cha-tab-c{
+  font-size: 12px;
+  line-height: 17px;
+  font-weight: 400;
+  color: rgb(153,153,153);
 }
 ul.in-out a:hover{
   cursor: pointer;

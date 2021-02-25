@@ -7,14 +7,14 @@
             <el-main style="padding:20px 0;">
                 <div id="crossInfo" style="width:1200px;margin:0 auto;height:320px;margin-bottom:60px;">
                     <div class="bre-cru">
-                        <span><a href="#">首页</a></span><span style="margin:0 6px;">></span>
+                        <span><a href="" target="_blank">首页</a></span><span style="margin:0 6px;">></span>
                         <span>{{lessInfo.pCategory}}</span><span style="margin:0 4px;">/</span><span>{{lessInfo.sCategory}}</span>
                     </div>
                     <div class="video-info">
                         <div class="video-url" style="width:40%;float:left;position:relative;">
                             <img :src="lessInfo.img" alt="" style="width:100%;height:288px;">
                             <div class="click-play" style="position:absolute;width:100%;height:288px;top:0;left:0;background-color: rgba(0, 0, 0, 0.3)">
-                                <a href="">
+                                <a href="" target="_blank">
                                     <i class="el-icon-caret-right" style="vertical-align:middle;margin:0;"></i>
                                     <span style="vertical-align:middle;">播放</span>
                                 </a>
@@ -34,12 +34,12 @@
                                 <a><span>国家精品</span></a>
                             </div>
                             <div class="schedule" style="width:88%;backgroundColor:#f5f5f5;padding:10px 20px 10px;margin-top:10px;color:#666;text-align:left;">
-                                <p style="color:#333;line-height:32px;font-size:14px;">第{{lessInfo.courseInfo[courseTime-1]}}次开课</p>
-                                <p style="width:100%;">开课时间：<span>{{lessInfo.courseInfo[courseTime-1].starttime}}</span>~<span>{{lessInfo.courseInfo[courseTime-1].endtime}}</span><span style="textAlign:right;color:red;float:right;color:#00C758;">进行至第{{lessInfo.courseInfo[courseTime-1].progress}}周，共{{lessInfo.courseInfo[courseTime-1].lesssonDuring}}课</span></p>
-                                <p>学时安排：<span>{{lessInfo.courseInfo[courseTime-1].hourPerWeek}}</span>小时每周</p>
+                                <p style="color:#333;line-height:32px;font-size:14px;">第{{lessInfo.courseTime}}次开课</p>
+                                <p style="width:100%;">开课时间：<span>{{lessInfo.courseInfo[lessInfo.courseTime-1].starttime}}</span>~<span>{{lessInfo.courseInfo[lessInfo.courseTime-1].endtime}}</span><span style="textAlign:right;color:red;float:right;color:#00C758;">进行至第{{lessInfo.courseInfo[lessInfo.courseTime-1].progress}}周，共{{lessInfo.courseInfo[lessInfo.courseTime-1].lesssonDuring}}课</span></p>
+                                <p>学时安排：<span>{{lessInfo.courseInfo[lessInfo.courseTime-1].hourPerWeek}}</span>小时每周</p>
                             </div>
-                            <div class="hot"><span>已有{{lessInfo.hot}}人参加</span></div>
-                            <div class="join-lesson">立即参加</div>
+                            <div class="hot"><span>已有{{lessInfo.courseInfo[lessInfo.courseTime-1].hot}}人参加</span></div>
+                            <a class="join-lesson" @click="joined?'':joinLess(lessInfo._id)" :href="joined?'#/Learn/'+'id='+lessInfo.id+'&courseTime='+lessInfo.courseTime:'javascript:;'">{{joined?'已参加,进入学习':'立即参加'}}</a>
                         </div>
                     </div>
                 </div>
@@ -48,8 +48,8 @@
                         <div class="lessDetail" style="width:75%;background:#fff;padding:25px 42px;">
                             <div class="tabClick" style="width:100%;font-size:18px;">
                                 <p style="border-bottom:1px solid #e6e6e6;line-height:44px;text-align:left;">
-                                    <span @click="tabStatus=0" :class="{active:tabStatus==0}" style="padding-bottom:8px;margin-right:30px;" >课程详情</span>
-                                    <span @click="tabStatus=1" :class="{active:tabStatus==1}" style="padding-bottom:8px;">课程评价</span>
+                                    <span @click="tabStatus=0;" :class="{active:tabStatus==0}" style="padding-bottom:8px;margin-right:30px;" >课程详情</span>
+                                    <span @click="tabStatus=1;filterComment=0;" :class="{active:tabStatus==1}" style="padding-bottom:8px;">课程评价</span>
                                 </p>
                             </div>
                             <div class="Info" v-if="tabStatus==0">
@@ -113,7 +113,7 @@
                                 <div class="viewSummary">
                                     <el-row type="flex" justify="start">
                                         <el-col :span="2">
-                                            <span class="rate">4.6</span>
+                                            <span class="rate">{{(value+'').length==1?value+'.0':value.toFixed(1)}}</span>
                                         </el-col>
                                         <el-col :span="7" style="text-align:left;padding-top:8px;padding-left:16px;">
                                             <div style="width:100%;">
@@ -124,17 +124,17 @@
                                                     score-template="{value}">
                                                 </el-rate>
                                             </div>
-                                            <div class="totalNum"><span>共{{lessInfo.courseComment==[]?0:(lessInfo.courseComment.length)}}条评价</span></div>
+                                            <div class="totalNum"><span>共{{commentList==[]?0:(commentList.length)}}条评价</span></div>
                                         </el-col>
                                         <el-col :span="4" :offset="11">
-                                            <el-button type="success" style="float:right" @click="commitComment()">提交评价</el-button>
+                                            <el-button v-if="joined" type="success" style="float:right" @click="commitComment()">提交评价</el-button>
                                             <el-dialog
                                             v-loading="loading"
                                             :visible.sync="dialogVisible"
                                             width="640px"
                                             :before-close="handleClose">
                                             <div class="head">
-                                                <p class="title">撰写《C语言程序设计进阶》的评价</p>
+                                                <p class="title">撰写《{{lessInfo.name}}》的评价</p>
                                                 <p class="mark"><span class="label">*</span>总评</p>
                                                 <p>
                                                     <el-rate
@@ -189,12 +189,12 @@
                                 </div>
                                 <div class="comFilter" style="height:37px;">
                                     <div style="float:right;border:1px solid #ededed;font-size:13px;padding:8px 0 10px;color:#999;">
-                                        <span :class="{active:filterComment==lessInfo.courseTime}" @click="filterComment=lessInfo.courseTime" style="border-right:1px solid #e6e6e6;">本次开课</span>
-                                        <span :class="{active:filterComment==0}" @click="filterComment=0">全部</span>
+                                        <span :class="{active:filterComment==lessInfo.courseTime}" @click="filterComment=lessInfo.courseTime;" style="border-right:1px solid #e6e6e6;">本次开课</span>
+                                        <span :class="{active:filterComment==0}" @click="filterComment=0;">全部</span>
                                     </div>
                                 </div>
                                 <div class="CommContainer">
-                                    <div v-for="(e,i) in lessInfo.courseComment" :key="i" style="padding-top:30px;">
+                                    <div v-for="(e,i) in commentList" :key="i" style="padding-top:30px;">
                                         <div class="avatar" style="width:5%;float:left;">
                                             <el-avatar size="medium" fit="contain" :src="e.user.photo"></el-avatar>
                                         </div>
@@ -215,9 +215,9 @@
                                                 <span>{{e.content}}</span>
                                             </div>
                                             <div class="tail">
-                                                <span>发表于{{e.date}}</span>
-                                                <span style="margin-left:8px;">第{{lessInfo.courseTime}}次开课</span>
-                                                <span style="float:right;"><i class="el-icon-thumb"></i>{{e.admiration}}</span>
+                                                <span>发表于{{formatDate(e.date)}}</span>
+                                                <span style="margin-left:8px;">第{{e.commentTime}}次开课</span>
+                                                <span :style="{color:e.user.praisedComment.indexOf(e._id)==-1?'':'#00c758'}" class="thumbs-up" @click="giveThumbsUp(e.user.praisedComment.indexOf(e._id)==-1,e._id,e.admiration);"><i class="el-icon-thumb"></i>{{e.admiration}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -244,9 +244,12 @@
 <script>
 import Header from '../components/Header';
 import request from '../api/index';
-import {mapMutations} from 'vuex';
+import {mapMutations,mapState} from 'vuex';
 const PostLessDetail = request.PostLessDetail;
-const PostComComent = request.PostComComent;
+const PostJoinLess = request.PostJoinLess;
+const PostComComment = request.PostComComent;
+const PostgetComment = request.PostgetComent;
+const PostgiveThumbsUp = request.PostgiveThumbsUp;
 export default {
     name:'DetailInfo',
     components:{
@@ -254,7 +257,6 @@ export default {
     },
     data(){
         return{
-            userInfo:{},
             tabStatus:0,
             dialogVisible:false,
             lessInfo:{
@@ -264,16 +266,17 @@ export default {
                         content:[]
                     }
                 },
-                courseInfo:{
-                    1:{
+                courseInfo:[
+                    {
                         starttime:'',
                         endtime:''
                     }
-                },
+                ],
                 courseTime:1
             },
+            commentList:[],
             filterComment:1,
-            value:4.5,
+            value:0,
             loading:false,
             value2:0,
             colors:['#FF7A3E', '#FF7A3E', '#FF7A3E'],
@@ -281,19 +284,38 @@ export default {
             areaVal:'',
             botLabelStatus:false,
             topLabelStatus:false,
+            joined:false
         }
     },
+    computed:{
+        ...mapState(['formatDate','iflogin','userInfo','emit_detailInfo_getLessInfo'])
+    },
     methods:{
-        ...mapMutations(['toggleLogin']),
+        ...mapMutations(['toggleLogin','updateInfo']),
         handleClose(done) {
             done();
         },
-        getComment(){
-            PostLessDetail({info:this.$route.params.info,allComment:this.filterComment})
+        getLessInfo(){
+            PostLessDetail({info:this.$route.params.info})
             .then(res=>{
-                console.log("before");
-                this.lessInfo=res.data.data[0];
-            }).catch(e=>{console.log("DetailInfo-created-PostLessDetail():error"+e);});
+                this.lessInfo=res.data.data;
+                console.log("lessinfo");
+                if(this.userInfo.enterLesson){
+                    this.joined=this.userInfo.enterLesson.indexOf(this.lessInfo._id)>-1;
+                }
+            }).catch(e=>{console.log("DetailInfo-methods-getLessInfo():error"+e);});
+            
+        },
+        joinLess(id){
+            if(!this.iflogin){
+                this.toggleLogin(true);
+                return;
+            };
+            PostJoinLess({id:id,lesson:{_id:this.lessInfo._id,courseTime:this.lessInfo.courseTime,hot:this.lessInfo.courseInfo[this.lessInfo.courseTime-1].hot}})
+            .then(res=>{
+                this.updateInfo();
+                // this.joined=true;
+            }).catch(e=>{console.log("DetailInfo-methods-joinLess():error"+e);})
         },
         areaLeave(){
             if(this.areaVal.length==0){
@@ -305,8 +327,40 @@ export default {
                 return;
             }
         },
+        getComment(){
+            console.log(this.filterComment);
+            PostgetComment({lid:this.lessInfo.id,lname:this.lessInfo.name,lschool:this.lessInfo.school,commentTime:this.filterComment==0?0:this.filterComment})
+                .then(res=>{
+                    if(res.data.code===1){
+                        this.commentList=res.data.list;
+                        var leng=res.data.list.length,
+                            averS=0;
+                        for(let i=0;i<leng;i++){
+                            averS+=res.data.list[i].star;
+                        };
+                        if(leng==0){
+                            this.value=0;
+                        }else{
+                            this.value=averS/leng;
+                        }
+                        length=null;
+                        averS=null;
+                        return;
+                    }
+                    this.$message({
+                        message:res.data.msg,
+                        type: 'warning'
+                    });
+                }).catch(e=>{
+                    cnosole.log("getComment-error"+e);
+                    this.$message({
+                        message:'服务器错误',
+                        type: 'warning'
+                    });
+                })
+        },
         commitComment(){
-            if(!this.$store.state.userInfo.ifLogin){
+            if(!this.iflogin){
                 this.toggleLogin(true);
                 console.log(this.$store.state.toLogin);
             }else{
@@ -333,25 +387,54 @@ export default {
                 return;
             };
             this.loading=true;
-            PostComComent({id:this.lessInfo.id,star:this.value2,content:this.areaVal})
-                .then(res=>{
-                    if(res.data.code==1){
-                        this.loading=false;
-                        this.$message({
-                            message:res.data.msg,
-                            type: 'success'
-                        });
-                        this.dialogVisible = false;
-                        this.getComment();
-                    }
-                }).catch(e=>{
-                    console.log(e);
+            PostComComment({
+                lid:this.lessInfo.id,
+                lname:this.lessInfo.name,
+                lschool:this.lessInfo.school,
+                commentTime:this.lessInfo.courseTime,
+                star:this.value2,
+                content:this.areaVal
+            }).then(res=>{
+                if(res.data.code==1){
                     this.loading=false;
                     this.$message({
-                        message:'服务器错误',
-                        type: 'error'
+                        message:res.data.msg,
+                        type: 'success'
                     });
-                })
+                    this.dialogVisible = false;
+                    this.getComment();
+                }
+            }).catch(e=>{
+                console.log(e);
+                this.loading=false;
+                this.$message({
+                    message:'服务器错误',
+                    type: 'error'
+                });
+            })
+        },
+        giveThumbsUp(praised,_id,admiration){
+            console.log('methods-giveThumbsUp()');
+            console.log("praised:",praised);
+            console.log("admiration:",admiration);
+            console.log(this.$store.state.userInfo);
+            if(this.$store.state.userInfo.ifLogin==undefined || this.$store.state.userInfo.ifLogin==null){
+                this.$store.state.toLogin=true;
+                return;
+            }
+            if(praised){
+                admiration=admiration+1;
+            }else{
+                admiration=admiration-1
+            };
+            PostgiveThumbsUp({praised:praised,_id:_id,admiration:admiration})
+                .then(res=>{
+                    this.getComment();
+                    this.$message({
+                        message:(praised?'':'取消')+'点赞成功',
+                        type: 'success'
+                    });
+                }).catch(e=>{console.log("methods-giveThumbsUp()-error:"+e);})
         }
     },
     watch:{
@@ -366,13 +449,30 @@ export default {
             }
         },
         'lessInfo.courseTime':function(Val,oldVal){
-            console.log("lessInfo.courseTime:",Val);
+            console.log("DetailInfo.vue-watch.lessInfo.courseTime:",Val);
             console.log("new");console.log(Val);
             console.log("old");console.log(oldVal);
+        },
+        filterComment(Val,oldVal){
+            console.log("filterComment:"+Val);
+            this.getComment();
+        },
+        iflogin(Val,oldVal){
+            if(Val){
+                this.getLessInfo();
+            };
+        },
+        emit_detailInfo_getLessInfo(Val,oldVal){
+            console.log(this.emit_detailInfo_getLessInfo);
+            if(Val){
+                this.getLessInfo();
+                this.$store.state.emit_detailInfo_getLessInfo = false;
+            };
         }
     },
     created(){
-        this.getComment();
+        this.getLessInfo();
+        console.log(this.emit_detailInfo_getLessInfo);
     }
 }
 </script>
@@ -433,6 +533,7 @@ export default {
         background-color: #ff7a3e;
         border-color: #ff7a3e;
         width: 30%;
+        cursor: pointer;
     }
     #DetailInfo .main-info{
         width: 60%;
@@ -464,9 +565,6 @@ export default {
     #DetailInfo .lessDesc .chartGoal{
         font-size: 16px;
         color:#333;
-    }
-    #DetailInfo #lessInfo .tail i{
-        color:#00C758;
     }
     #DetailInfo .normal{
         font-size: 12px;
@@ -631,5 +729,13 @@ export default {
         display: -webkit-flex;
         flex-flow:column wrap;
         justify-content: space-between;
+    }
+    #DetailInfo .thumbs-up{
+        float:right;
+        cursor:pointer;
+        color:#999;
+    }
+    #DetailInfo .thumbs-up:hover{
+        color:#00c758;
     }
 </style>

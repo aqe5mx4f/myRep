@@ -4,9 +4,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require("mongoose");
 //连接数据库
-mongoose.connect("mongodb://localhost:27017/mooc",{ useNewUrlParser: true , useUnifiedTopology: true})
-    .then(()=>{console.log("数据库连接成功")})
-    .catch(()=>{console.log("数据库连接失败")});
+mongoose.connect("mongodb://localhost:27017/mooc", { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => { console.log("数据库连接成功") })
+    .catch(() => { console.log("数据库连接失败") });
+mongoose.set('useFindAndModify', false);
 
 var app = express();
 app.use(logger('dev'));
@@ -15,28 +16,28 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use((req,res,next) =>{
+app.use((req, res, next) => {
     res.header({
-        'Access-Control-Allow-Credentials':true,
+        'Access-Control-Allow-Credentials': true,
         'Access-Control-Allow-Origin': req.headers.origin || '*',
-        'Access-Control-Allow-Headers':'Content-Type',
-        'Access-Control-Allow-Methods':'PUT,POST,GET,DELETE,OPTIONS',
-        'Content-Type':'application/json;charset=utf-8'
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'PUT,POST,GET,DELETE,OPTIONS',
+        'Content-Type': 'application/json;charset=utf-8'
     })
-    if(req.method === 'OPTIONS'){
+    if (req.method === 'OPTIONS') {
         res.sendStatus(200);
-    }else{
+    } else {
         next();
     }
 });
-app.use((req,res,next) =>{
-    if(/^\/(login)/.test(req.url)){
+app.use((req, res, next) => {
+    if (/^\/(login)/.test(req.url)) {
         next();
-    }else{
+    } else {
         next();
     }
 })
 app.use(require('./session/index'));
-app.use('/',require('./routes/index'));
+app.use('/', require('./routes/index'));
 
 module.exports = app;

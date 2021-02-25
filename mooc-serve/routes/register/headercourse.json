@@ -1,0 +1,125 @@
+[{
+        "title": "大学",
+        "list": [{
+                "title": "国家精品",
+                "channel": 0
+            },
+            {
+                "title": "计算机",
+                "channel": 1
+            },
+            {
+                "title": "外语",
+                "channel": 2
+            },
+            {
+                "title": "理学",
+                "channel": 3
+            },
+            {
+                "title": "工学",
+                "channel": 4
+            },
+            {
+                "title": "经济管理",
+                "channel": 9
+            },
+            {
+                "title": "心理学",
+                "channel": 10
+            },
+            {
+                "title": "文史哲",
+                "channel": 11
+            },
+            {
+                "title": "艺术设计",
+                "channel": 12
+            },
+            {
+                "title": "医药卫生",
+                "channel": 13
+            },
+            {
+                "title": "教育教学",
+                "channel": 14
+            },
+            {
+                "title": "法学",
+                "channel": 15
+            },
+            {
+                "title": "农林园艺",
+                "channel": 16
+            },
+            {
+                "title": "体育运动",
+                "channel": 21
+            },
+            {
+                "title": "音乐与舞蹈",
+                "channel": 17
+            },
+            {
+                "title": "养生保健",
+                "channel": 22
+            },
+            {
+                "title": "期末试卷",
+                "channel": 23
+            },
+            {
+                "title": "学长学姐说",
+                "channel": 24
+            },
+            {
+                "title": "爱好变副业",
+                "channel": 25
+            }
+
+        ]
+    },
+    {
+        "title": "升学/择业",
+        "list": [{
+                "title": "期末不佳",
+                "channel": 26
+            },
+            {
+                "title": "21考研",
+                "channel": 18
+            },
+            {
+                "title": "22考研",
+                "channel": 5
+            },
+            {
+                "title": "应试英语",
+                "channel": 7
+            },
+            {
+                "title": "限时公开课",
+                "channel": 27
+            },
+            {
+                "title": "考证就业",
+                "channel": 19
+            },
+            {
+                "title": "实用英语",
+                "channel": 8
+            },
+            {
+                "title": "英语实训",
+                "channel": 28
+            }
+        ]
+    },
+    {
+        "title": "终生学习",
+        "list": [{
+            "title": "名师专栏",
+            "channel": 20
+        }]
+    }
+]

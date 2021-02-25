@@ -5,31 +5,50 @@ axios.defaults.withCredentials = true;
 axios.defaults.headers.post["Content-Type"] = 'application/x-www-from-urlcoded';
 
 export default {
-    postRegister(options){
-        return axios.post('/register',options);
+    postRegister(options) {
+        return axios.post('/register', options);
     },
-    postLogin(options){
-        return axios.post('/login',options);
+    postLogin(options) {
+        return axios.post('/login', options);
     },
-    postIfLogin(){
-        return axios.post('/login/iflogin');
+    PostUpdateInfo(options) {
+        return axios.post('/login/updateInfo', options);
     },
-    PostChannelTab(options){
-        return axios.post('/channel/tab',options);
+    PostGetSession() {
+        return axios.post('/login/getSession');
     },
-    PostChannelNewBest(options){
-        return axios.post('/channel/newBest',options);
+    PostChannelAll() {
+        return axios.post('/channel/all');
     },
-    PostChannelFilterLesson(options){
-        return axios.post('/channel/filterLesson',options);
+    PostChannelTab(options) {
+        return axios.post('/channel/tab', options);
     },
-    PostLessDetail(options){
-        return axios.post('/detail/lesson',options);
+    PostHeaderCourse() {
+        return axios.post('/header/course');
     },
-    PostComComent(options){
-        return axios.post('/detail/lesson/commitComment',options);
+    PostHeaderSearch(options) {
+        return axios.post('/header/search', options);
     },
-    PostgetComent(){
-        return axios.post('/detail/lesson/getComment');
+    PostChannelNewBest(options) {
+        return axios.post('/channel/newBest', options);
+    },
+    PostChannelFilterLesson(options) {
+        return axios.post('/channel/filterLesson', options);
+    },
+    PostLessDetail(options) {
+        return axios.post('/detail/lesson', options);
+    },
+    PostJoinLess(options) {
+        return axios.post('/detail/lesson/joinLess', options);
+    },
+    PostComComent(options) {
+        return axios.post('/detail/comment/commitComment', options);
+    },
+    PostgetComent(options) {
+        return axios.post('/detail/comment', options);
+    },
+    PostgiveThumbsUp(options) {
+        return axios.post('/detail/comment/thumbsUp', options);
     }
+
 }

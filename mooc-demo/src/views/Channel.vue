@@ -9,7 +9,8 @@
                     <div id="ChannelTab">
                         <div>
                             <h3 class="title">{{object.title}}</h3>
-                            <span v-for="(e,i) in object.content" :key="i" @click="tabIndex=i;hid[1]=i;changeSchannel()" :style="{color:tabIndex==i?'#fff':'',backgroundColor:tabIndex==i?'#00C758':''}"><a :href="'#/Channel/'+hid[0]+'-'+i">{{e}}</a></span>
+                            <span v-if="object.list.length>0" @click="tabIndex=0;hid[1]=0;changeSchannel()" :style="{color:tabIndex==0?'#fff':'',backgroundColor:tabIndex==0?'#00C758':''}"><a :href="'#/Channel/'+hid[0]+'-'+0+'-'+encodeURI(encodeURI(object.title))">全部</a></span>
+                            <span v-for="(e,i) in object.list" :key="i" @click="tabIndex=i+1;hid[1]=i+1;changeSchannel()" :style="{color:tabIndex==(i+1)?'#fff':'',backgroundColor:tabIndex==(i+1)?'#00C758':''}"><a :href="'#/Channel/'+hid[0]+'-'+(i+1)+'-'+encodeURI(encodeURI(object.title))">{{e}}</a></span>
                         </div>
                     </div>
                 </div>

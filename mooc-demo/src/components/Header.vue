@@ -11,10 +11,12 @@
                   <template slot="title">课程</template>
                   <el-menu-item index="1-1" style="width:700px;height:auto;">
                     <p style="color:#999999">中国大学MOOC，为你提供一流的大学教育</p>
-                    <div v-for="(e,i) in course" :key="i">
+                    <div v-for="(e,i) in headercourse" :key="i">
                       <p><strong>{{e.title}}</strong></p>
                       <ul id="menu-content">
-                        <li v-for="item in e.content" :key="item.id">{{item}}</li>
+                        <li v-for="(item,index) in e.list" :key="index">
+                          <a :href="'#/Channel/'+item.channel+'-0'+'-'+encodeURI(encodeURI(item.title))" target="_blank">{{item.title}}</a>
+                        </li>
                       </ul>
                     </div>
                   </el-menu-item>
@@ -26,15 +28,33 @@
               </el-menu>
             </div>
           </el-col>
-          <el-col :span="4" :offset="1"><div class="grid-content bg-purple-light" style="line-height:60px;">
-            <el-input placeholder="请输入内容" v-model="input" style="border-radius:22px;"><i slot="suffix" class="el-input__icon el-icon-search" style="backgroundColor:#00c758;height:39px;border-radius:24px;width:70px;margin:10px -4px 0 0;font-size:24px;"></i>
-          </el-input>
-          </div></el-col>
+          <el-col :span="4" :offset="1">
+            <div class="grid-content bg-purple-light" style="line-height:60px;position:relative;">
+              <input type="text" autocomplete="off" v-model="input" placeholder="请输入课程,id或学校" class="el-input__inner" style="border-radius:24px;">
+              <i class="el-input__icon el-icon-search" style="height: 39px; color:#409eff;border-radius: 24px; width: 70px;font-size: 24px;position:absolute;top:10.5px;right:0px;"></i>
+              <div class="searchOutCome" v-if="searchShow" style="margin-top:-10px;font-size:12px;width:160px;margin-left:20px;">
+                <div class="fullOutcome" v-if="searchOutCome" style="position:relative;z-index:999;border:1px solid #d5d5d5;background:#f5f5f5;">
+                  <div class="clue">请选择或继续输入...</div>
+                  <div class="OutCome">
+                    <div v-if="searchOutCome.length>1">
+                      <a target="_blank" :href="'#/Search/'+'search='+input">查看'<span>{{this.input}}</span>'所有相关课程</a>
+                    </div>
+                    <div v-for="(e,i) in searchOutCome" :key="i">
+                      <a target="_blank"  
+                        :href="'#/DetailInfo/'+encodeURI(encodeURI(e.name))+'&'+encodeURI(encodeURI(e.school))+'&'+encodeURI(encodeURI(e.id))"
+                      >{{e.name}}&nbsp({{e.school}})</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="emptyOutcome" v-else>无搜索结果,请重新输入</div>
+              </div>
+            </div>
+          </el-col>
           <el-col :span="3" class="log-reg"  style="font-size:17px;float:right;">
-            <span v-if="loginInfo.ifLogin" style="float:left;line-height:60px;">个人中心</span>
-            <el-dropdown v-if="loginInfo.ifLogin" trigger="hover" style="float:right;margin-top:calc(30px - 31px/2)">
+            <span v-if="iflogin" style="float:left;line-height:60px;">个人中心</span>
+            <el-dropdown v-if="iflogin" trigger="hover" style="float:right;margin-top:calc(30px - 31px/2)">
               <span class="el-dropdown-link">
-                <el-avatar shape="square" size="small" fit="cover" :src="loginInfo.photo"></el-avatar>
+                <el-avatar shape="square" size="small" fit="cover" :src="userInfo.photo"></el-avatar>
                 <i class="el-icon-arrow-down el-icon--right" style="vertical-align:super;"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
@@ -45,7 +65,7 @@
                 <el-dropdown-item divided>退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <span v-if="!loginInfo.ifLogin" @click="dialogVisible=true" class="Reg-Log" style="float:right;line-height:60px;">登录&nbsp|&nbsp注册</span>
+            <span v-if="!iflogin" @click="dialogVisible=true" class="Reg-Log" style="float:right;line-height:60px;">登录&nbsp|&nbsp注册</span>
             <el-dialog
             :visible.sync="dialogVisible"
             lock-scroll="true"
@@ -62,8 +82,10 @@
 <script>
 import LoginRegister from '../components/LoginRegister';
 import request from '../api/index';
-import {mapMutations} from 'vuex';
-const getIfLogin = request.postIfLogin;
+import {mapMutations,mapState} from 'vuex';
+const PostGetSession = request.PostGetSession;
+const PostHeaderCourse = request.PostHeaderCourse;
+const PostHeaderSearch = request.PostHeaderSearch;
 export default {
     name:'Header',
     components:{
@@ -72,48 +94,42 @@ export default {
     data(){
         return{
             activeIndex:'1-1',
-            course:{
-                top:{
-                title:"大学",
-                content:["国家精品","计算机","外语","理学","工学",
-                    "经济管理","心理学","文史哲","艺术设计","医药卫生",
-                    "教育医学","法学","农林园艺","体育运动","音乐与舞蹈",
-                    "养生保健","期末试卷","学长学姐说","爱好变副业"
-                ]
-                },
-                mid:{
-                title:"升学/择业",
-                content:["期末不佳","21考研","22考研","应试英语","限时公开课",
-                    "考证就业","实用英语","英语实训"
-                ]
-                },
-                bot:{
-                    title:"终生学习",
-                    content:["名师专栏"]
-                }
-            },
+            headercourse:[],
             dialogVisible: false,
             handleCloseStatus:false,
-            loginInfo:{
-                ifLogin:false,
-                user:'',
-                photo:''
-            }
+            input:'',
+            searchTimeOut:'',
+            searchShow:false,
+            searchOutCome:0
         }
     },
-    created:function(){
-      if(!this.$store.state.userInfo.ifLogin){
-        getIfLogin().then(res=>{
-          if(res.data.userInfo){
-              this.loginInfo.ifLogin=true;
-              this.loginInfo.user=res.data.userInfo.user;
-              this.loginInfo.photo=res.data.userInfo.photo;
-              this.loadInfo(this.loginInfo);
-          };
-        }).catch(e=>{console.log("Header.vue - created - getIfLogin()-error");console.log(e);})
-      }else{
-        this.loginInfo=this.$store.state.userInfo;
+    computed:{
+      ...mapState(['iflogin','userInfo'])
+    },
+    created(){
+      if(this.$store.state.userInfo.user==undefined){
+        PostGetSession()
+          .then(res=>{
+            if(res.data.code==1){
+              console.log("header-getSession");
+              console.log(this.$store.state.userInfo);
+              this.$store.state.userInfo=res.data.data;
+              this.$store.state.iflogin=true;
+              console.log(this.$store.state.userInfo);
+            }
+          }).catch(e=>{console.log("App-created()-PostGetSession:error"+e)});
       }
+    },
+    mounted(){
+      PostHeaderCourse()
+        .then(res=>{
+          if(res.data.code==1){
+            this.headercourse=res.data.data;
+          };
+        }).catch(e=>{
+          console.log("header.vue-mounted-PostHeaderCourse-catch:");
+          console.log(e);
+        })
     },
     watch:{
       ToLogin(Val,oldVal){
@@ -132,29 +148,44 @@ export default {
         closeDia(status){
             this.dialogVisible=status;
             this.toggleLogin(false);
-        },
-        judgelogin(data){
-            if(data.LoginStatus){
-                this.loginInfo.ifLogin=true;
-                this.loginInfo.user=data.user;
-                this.loginInfo.photo=data.photo;
-                this.loadInfo(this.loginInfo);
-            }
         }
+        // judgelogin(data){
+        //     if(data.LoginStatus){
+        //         this.loadInfo(this.loginInfo);
+        //         this.loginInfo=this.$store.state.userInfo
+        //     }
+        // }
     },
     watch:{
       '$store.state.toLogin':function(Val,oldVal){
-            console.log(Val);
-            if(Val){
-              this.dialogVisible=true;
-            }
+        console.log(Val);
+        if(Val){
+          this.dialogVisible=true;
         }
-        // '$store.state.ifLogin':function(Val,oldVal){
-        //     console.log(Val);
-        //     if(Val){
-        //       this.dialogVisible=true;
-        //     }
-        // },
+      },
+      input:function(Val,oldVal){
+        var thisVue=this;
+        window.clearTimeout(this.searchTimeOut);
+        this.searchTimeOut=setTimeout(function(){
+          if(!Val==''){
+            PostHeaderSearch({search:Val,on:3,gjjp:0})
+              .then(res=>{
+                thisVue.searchShow=true;
+                if(res.data.code==1){
+                  console.log(res.data.data);
+                  thisVue.searchOutCome=res.data.data;
+                };
+                if(res.data.code==0){
+                  thisVue.searchOutCome=0;
+                };
+              }).catch(e=>{
+                console.log("Header-watch-input-PostHeaderSearch-catch--e:");
+                console.log(e);
+              })
+          }
+        },1000)       
+      }
+      
     }
 }
 </script>
@@ -177,5 +208,38 @@ export default {
     width:16%;
     text-align: center;
     background-color:rgba(0,0,0,0.04);
+}
+#menu-content li>a{
+  width:100%;
+  height:100%;
+  display: block;
+}
+#menu-content li:hover{
+  background-color:rgba(0, 199, 88, 0.1);
+  color:rgb(0, 199, 88);
+}
+.searchOutCome .clue{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height:30px;
+  line-height: 30px;
+  text-align: left;
+  text-indent: 7px;
+}
+.searchOutCome .OutCome>div{
+  height:32px;
+  text-align: left;
+  text-indent: 7px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  line-height: 32px;
+}
+.searchOutCome .OutCome>div:hover{
+  background: #ECECEE;
+}
+.searchOutCome .OutCome a{
+  color:#00c758;
 }
 </style>

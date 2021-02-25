@@ -43,7 +43,7 @@
 <script>
 import request from '../api/index'
 const getRegister = request.postRegister;
-import {mapStates}  from 'vuex';
+import {mapMutations,mapState} from 'vuex';
 const getLogin = request.postLogin;
 export default {
     name:'LoginRegister',
@@ -137,6 +137,7 @@ export default {
         }
     },
     methods:{
+        ...mapMutations(['loadInfo']),
         submitForm(formName,status) {
         this.$refs[formName].validate((valid) => {
           if (!valid) {
@@ -182,7 +183,7 @@ export default {
                             duration:1000
                         });
                         this.CloseDia();
-                        this.$emit('judgeLogin',{LoginStatus:true,user:res.data.user,photo:res.data.photo});
+                        this.loadInfo(res.data.data);
                     }else{
                         this.$message({
                             message:res.data.msg,

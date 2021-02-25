@@ -3,71 +3,103 @@ const userDB = require('../../db/user');
 const crypto = require('crypto');
 
 let router = express.Router();
-router.post('/',(req,res)=>{
-    if(req.session.login){
+router.post('/', (req, res) => {
+    if (req.session.login) {
         res.send({
-            code : 2,
-            msg : "已经登录,请退出之后再登录"
+            code: 2,
+            msg: "已经登录,请退出之后再登录"
         });
         return;
     }
-    let {user,pwd} = req.body;
-    userDB.findOne({user})
-        .then(data=>{
-            if(data){
+    let { user, pwd } = req.body;
+    userDB.findOne({ user })
+        .then(data => {
+            if (data) {
                 //有这个用户
-                if(data.pwd === crypto.createHash("sha256").update(pwd).digest("hex")){
+                if (data.pwd === crypto.createHash("sha256").update(pwd).digest("hex")) {
                     //写入session
                     req.session.login = data;
+                    delete data.pwd;
+                    delete data.__V;
                     //返回前端
                     res.send({
-                        code : 1,
-                        msg :"登录成功",
-                        user : data.user,
-                        photo : data.photo
+                        code: 1,
+                        msg: "登录成功",
+                        data: data
                     });
-                }else{
+                } else {
                     res.send({
-                        code :0,
-                        msg : "密码错误"
+                        code: 0,
+                        msg: "密码错误"
                     });
                 }
-            }else{
+            } else {
                 //没有这个用户
                 res.send({
-                    code : 3,
-                    msg : "用户不存在"
+                    code: 3,
+                    msg: "用户不存在"
                 })
             }
         })
-        .catch(e=>{
+        .catch(e => {
             console.log(e);
             res.send({
-                code :  4,
-                msg : "服务器错误,请稍后再试"
+                code: 4,
+                msg: "服务器错误,请稍后再试"
             })
         })
 });
 
-//验证是否登录
-router.post("/ifLogin",(req,res)=>{
-    let data = req.session.login;
-    let resData = false;
-    if(data){
-            delete data.pwd;
-            delete data.__V;
-            resData = data;
+//重新获取用户信息
+router.post("/updateInfo", (req, res) => {
+    userDB.findById({ _id: req.body._id }, { pwd: 0 })
+        .then(data => {
+            res.send({
+                code: 1,
+                msg: '重新获取用户信息成功',
+                Info: data
+            })
+        }).catch(e => {
+            res.send({
+                code: 0,
+                msg: '服务器错误,清稍后再试'
+            });
+            console.log("routes-loign-index:/updateInfo--userDB.catch-error:");
+            console.log(e);
+        });
+});
+//判断session是否过期并返回用户信息
+router.post("/getSession", (req, res) => {
+    if (req.session.login) {
+        userDB.findById({ _id: req.session.login._id })
+            .then(data => {
+                delete data.pwd;
+                delete data.__v;
+                res.send({
+                    code: 1,
+                    data: data
+                })
+            }).catch(e => {
+                res.send({
+                    code: 0,
+                    msg: '服务器错误,清稍后再试'
+                });
+                console.log("routes-loign-index:/updateInfo--userDB.catch-error:");
+                console.log(e);
+            });
+    } else {
+        res.send({
+            code: 0,
+            msg: '近期未登录,请先登录'
+        });
     }
-    res.send({
-        userInfo : resData
-    });
 });
 //退出登录
-router.post('/Logout',(req,res)=>{
+router.post('/Logout', (req, res) => {
     req.session.destroy();
     res.send({
-        code :1,
-        msg : "退出成功"
+        code: 1,
+        msg: "退出成功"
     });
 });
 module.exports = router;

@@ -18,7 +18,7 @@
             </div>
             <div class="show-frame">
                 <div class="view-part">
-                    <a class="indu-part" v-for="(e,i) in LessonContainer.list" :key="i" :href="'#/DetailInfo/'+encodeURI(encodeURI(e.name))+'&'+encodeURI(encodeURI(e.school))+'&'+encodeURI(encodeURI(e.id))" :style="{margin:(i%5==0?'0 0.8% 16px 0':'')||(i%5==4?'0 0 16px 0.8%':'')}">
+                    <a class="indu-part" target="_blank" v-for="(e,i) in LessonContainer.list" :key="i" :href="'#/DetailInfo/'+encodeURI(encodeURI(e.name))+'&'+encodeURI(encodeURI(e.school))+'&'+encodeURI(encodeURI(e.id))" :style="{margin:(i%5==0?'0 0.8% 16px 0':'')||(i%5==4?'0 0 16px 0.8%':'')}">
                         <div class="img"><img :src="e.img"></div>
                         <div class="obj-src"><p><strong>{{e.name}}</strong></p><p>{{e.school}}</p><p style="color:#999;height:23px;line-height:31px;">{{e.courseInfo[e.courseTime-1].main_teacher}}</p></div>
                         <div class="hot-info" v-if="e.courseInfo[e.courseTime-1].state==1"><p style="color:#53B880;"><i class="el-icon-unlock"></i><span>进行至第{{e.courseInfo[e.courseTime-1].progress}}周</span><span>{{e.courseInfo[e.courseTime-1].hot}}人参加</span></p></div>

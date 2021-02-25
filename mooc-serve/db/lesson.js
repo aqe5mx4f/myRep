@@ -1,32 +1,31 @@
 const mongoose = require('mongoose');
 
-let lesson = mongoose.model("lesson",new mongoose.Schema({
-    id:{type:Number,requires:true},
-    name:{type:String,required:true},
-    school:{type:String,require:true},
-    pChannel:{type:Number,required:true},
-    sChannel:{type:Number,required:true},
-    pCategory : {type:String,required:true},
-    sCategory : {type:String,required:true},
-    courseTime:{type:Number,default:1},
-    courseSummary:{type:Object,require:true},
-    img:{type:String,required:true},
-    courseInfo:[
-        {
-            main_teacher : {type:String,required:true},
-            teachers:{type:Array,default:[]},
-            hot:{type:Number,default:0},
-            progress:{type:Number,default:0},
-            hourPerWeek:{type:String,default:"2-3"},
-            lesssonDuring:{type:Number,default:10},
-            starttime:{type:String,default:'时间待定'},
-            endtime:{type:String,default:'时间待定'},
-            visiable:{type:Boolean,default:false},
-            averageHot:{type:Number,default:0},
-            state:{type:Number,default:2}
-        }
-    ]
-})); 
+let lesson = mongoose.model("lesson", new mongoose.Schema({
+    id: { type: Number, requires: true },
+    name: { type: String, required: true },
+    school: { type: String, require: true },
+    pChannel: { type: Number, required: true },
+    sChannel: { type: Number, required: true },
+    pCategory: { type: String, required: true },
+    sCategory: { type: String, required: true },
+    courseTime: { type: Number, default: 1 },
+    courseSummary: { type: Object, require: true },
+    img: { type: String, required: true },
+    courseInfo: [{
+        main_teacher: { type: String, required: true },
+        teachers: { type: Array, default: [] },
+        hot: { type: Number, default: 0 },
+        courseTime: { type: Number, default: 1 },
+        progress: { type: Number, default: 0 },
+        hourPerWeek: { type: String, default: "2-3" },
+        lesssonDuring: { type: Number, default: 10 },
+        starttime: { type: String, default: '时间待定' },
+        endtime: { type: String, default: '时间待定' },
+        visiable: { type: Boolean, default: false },
+        averageHot: { type: Number, default: 0 },
+        state: { type: Number, default: 2 }
+    }]
+}));
 // var toStr=[zero,one,two,three,four,five,six,seven,eight,nine,ten];
 // var url="http://localhost:3002/"
 // var toCate=['国家精品'];
