@@ -5,7 +5,7 @@ const userDB = require('../../../db/user');
 
 router.post("/", (req, res) => {
     let { lname, lschool, lid, commentTime } = req.body;
-    let filter = { lname: lname, lschool: lschool, lid: parseInt(lid) };
+    let filter = { lname: lname, lschool: lschool, lid: lid };
     if (!commentTime == 0) {
         filter.commentTime = parseInt(commentTime);
     };
@@ -26,7 +26,7 @@ router.post("/commitComment", (req, res) => {
     commentDB.create({
         lname: lname,
         lschool: lschool,
-        lid: parseInt(lid),
+        lid: lid,
         user: req.session.login._id,
         commentTime: commentTime,
         content: content,

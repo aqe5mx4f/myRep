@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 let comment = mongoose.model("comment", new mongoose.Schema({
-    lid: { type: Number, required: true },
+    lid: { type: mongoose.Schema.Types.ObjectId, ref: "lesson", required: true },
     lname: { type: String, required: true },
     lschool: { type: String, required: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },

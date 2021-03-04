@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:3002';
+axios.defaults.baseURL = 'http://47.93.63.232:3002';
 axios.defaults.withCredentials = true;
 axios.defaults.headers.post["Content-Type"] = 'application/x-www-from-urlcoded';
 
@@ -19,6 +19,15 @@ export default {
     },
     PostChannelAll() {
         return axios.post('/channel/all');
+    },
+    PostRankHot() {
+        return axios.post('/rank/hot');
+    },
+    PostRankNew() {
+        return axios.post('/rank/new');
+    },
+    PostRankStar() {
+        return axios.post('/rank/star');
     },
     PostChannelTab(options) {
         return axios.post('/channel/tab', options);

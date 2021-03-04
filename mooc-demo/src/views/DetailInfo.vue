@@ -12,7 +12,7 @@
                     </div>
                     <div class="video-info">
                         <div class="video-url" style="width:40%;float:left;position:relative;">
-                            <img :src="lessInfo.img" alt="" style="width:100%;height:288px;">
+                            <img :src="ImgUrlTrans(lessInfo.img)" alt="" style="width:100%;height:288px;">
                             <div class="click-play" style="position:absolute;width:100%;height:288px;top:0;left:0;background-color: rgba(0, 0, 0, 0.3)">
                                 <a href="" target="_blank">
                                     <i class="el-icon-caret-right" style="vertical-align:middle;margin:0;"></i>
@@ -196,7 +196,7 @@
                                 <div class="CommContainer">
                                     <div v-for="(e,i) in commentList" :key="i" style="padding-top:30px;">
                                         <div class="avatar" style="width:5%;float:left;">
-                                            <el-avatar size="medium" fit="contain" :src="e.user.photo"></el-avatar>
+                                            <el-avatar size="medium" fit="contain" :src="PhotoUrlTrans(e.user.photo)"></el-avatar>
                                         </div>
                                         <div class="comInfo" style="width:95%;float:right;text-align:left;padding-left:18px;padding-bottom:30px;">
                                             <div class="head">
@@ -226,7 +226,7 @@
                         </div>
                         <div class="teaWithLess" style="width:23%;background:#fff;padding:25px;">
                             <div class="schImg" style="border-bottom:1px solid #e6e6e6;padding-bottom:22px;">
-                                <img src="http://localhost:3002/images/school/SouWestJTUni.jpg" alt="">
+                                <img src="/static/self_img/school/SouWestJTUni.jpg" alt="">
                             </div>
                             <div class="m-teacher" style="margin-top:24px;">
                                 <p class="n-number" style="border-left:4px solid #00C758;font-size: 18px;padding-left: 14px;line-height: 18px;text-align:left;">5位授课老师</p>
@@ -291,6 +291,12 @@ export default {
         ...mapState(['formatDate','iflogin','userInfo','emit_detailInfo_getLessInfo'])
     },
     methods:{
+        PhotoUrlTrans(url){
+            return url.replace("http://47.93.63.232:3002/images",'/static/self_img/userimg');
+      },
+        ImgUrlTrans(url){
+            return url.replace("http://47.93.63.232:3002/images",'/static/self_img');
+        },
         ...mapMutations(['toggleLogin','updateInfo']),
         handleClose(done) {
             done();
@@ -329,7 +335,7 @@ export default {
         },
         getComment(){
             console.log(this.filterComment);
-            PostgetComment({lid:this.lessInfo.id,lname:this.lessInfo.name,lschool:this.lessInfo.school,commentTime:this.filterComment==0?0:this.filterComment})
+            PostgetComment({lid:this.lessInfo._id,lname:this.lessInfo.name,lschool:this.lessInfo.school,commentTime:this.filterComment==0?0:this.filterComment})
                 .then(res=>{
                     if(res.data.code===1){
                         this.commentList=res.data.list;
@@ -388,7 +394,7 @@ export default {
             };
             this.loading=true;
             PostComComment({
-                lid:this.lessInfo.id,
+                lid:this.lessInfo._id,
                 lname:this.lessInfo.name,
                 lschool:this.lessInfo.school,
                 commentTime:this.lessInfo.courseTime,

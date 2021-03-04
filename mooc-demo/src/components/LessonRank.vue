@@ -8,15 +8,15 @@
                 <p>热门排行TOP50<span class="label1">HOT</span></p>
                 <div class="show-frame">
                     <div class="view-part" :style="{width:Math.ceil(LessonRank.hot_rank.length/5)*350+'px',transform:'translateX('+(1-PageStatus.HotRank)*350+'px)'}" >
-                        <div class="indu-part" v-for="(e,i) in LessonRank.hot_rank" :key="i">
+                        <a class="indu-part" target="_blank" v-for="(e,i) in LessonRank.hot_rank" :key="i" :href="'#/DetailInfo/'+encodeURI(encodeURI(e.name))+'&'+encodeURI(encodeURI(e.school))+'&'+encodeURI(encodeURI(e.id))">
                             <span>{{++i}}</span>
-                            <div class="img"><img :src="e.img" alt=""></div>
+                            <div class="img"><img :src="ImgUrlTrans(e.img)" alt=""></div>
                             <div>
-                                <p class="obj">{{e.object}}</p>
-                                <p class="src">{{e.src}}</p>
-                                <p class="hot">{{e.hot}}<span>人参加</span></p>
+                                <p class="obj">{{e.name}}</p>
+                                <p class="src">{{e.school}}</p>
+                                <p class="hot">{{e.courseInfo[0].hot}}<span>人参加</span></p>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
                 <div class="click-arrow arrow-right" v-if="EnterStatus.HotStatus&&PageStatus.HotRank<Math.ceil(LessonRank.hot_rank.length/5)" @click="PageStatus.HotRank++"><i class="el-icon-arrow-right" ></i></div>
@@ -28,15 +28,15 @@
                 <p>新课排行<span class="label1">NEW</span></p>
                 <div class="show-frame">
                     <div class="view-part" :style="{width:Math.ceil(LessonRank.newlesson_rank.length/5)*350+'px',transform:'translateX('+(1-PageStatus.NewRank)*350+'px)'}">
-                        <div class="indu-part" v-for="(e,i) in LessonRank.newlesson_rank" :key="i">
+                        <a class="indu-part" target="_blank" v-for="(e,i) in LessonRank.newlesson_rank" :key="i" :href="'#/DetailInfo/'+encodeURI(encodeURI(e.name))+'&'+encodeURI(encodeURI(e.school))+'&'+encodeURI(encodeURI(e.id))">
                             <span>{{++i}}</span>
-                            <div class="img"><img :src="e.img" alt=""></div>
+                            <div class="img"><img :src="ImgUrlTrans(e.img)" alt=""></div>
                             <div>
-                                <p class="obj">{{e.object}}</p>
-                                <p class="src">{{e.src}}</p>
-                                <p class="hot">{{e.hot}}<span>人参加</span></p>
+                                <p class="obj">{{e.name}}</p>
+                                <p class="src">{{e.school}}</p>
+                                <p class="hot">{{e.courseInfo[0].hot}}<span>人参加</span></p>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
                 <div class="click-arrow arrow-right" v-if="EnterStatus.NewStatus&&PageStatus.NewRank<Math.ceil(LessonRank.newlesson_rank.length/5)" @click="PageStatus.NewRank++"><i class="el-icon-arrow-right" ></i></div>
@@ -48,15 +48,15 @@
                 <p>五星评价TOP50<span class="label1">GOOD</span></p>
                 <div class="show-frame">
                     <div class="view-part" :style="{width:Math.ceil(LessonRank.five_star.length/5)*350+'px',transform:'translateX('+(1-PageStatus.FiveStar)*350+'px)'}">
-                        <div class="indu-part" v-for="(e,i) in LessonRank.five_star" :key="i">
+                        <a class="indu-part" target="_blank" v-for="(e,i) in LessonRank.five_star" :key="i" :href="'#/DetailInfo/'+encodeURI(encodeURI(e.lid.name))+'&'+encodeURI(encodeURI(e.lid.school))+'&'+encodeURI(encodeURI(e.lid.id))">
                             <span>{{++i}}</span>
-                            <div class="img"><img :src="e.img" alt=""></div>
+                            <div class="img"><img :src="ImgUrlTrans(e.lid.img)" alt=""></div>
                             <div>
-                                <p class="obj">{{e.object}}</p>
-                                <p class="src">{{e.src}}</p>
-                                <p class="hot">{{e.hot}}<span>人参加</span></p>
+                                <p class="obj">{{e.lid.name}}</p>
+                                <p class="src">{{e.lid.school}}</p>
+                                <p class="hot">{{e.lid.courseInfo[0].hot}}<span>人参加</span></p>
                             </div>
-                        </div>
+                        </a>
                     </div>
                 </div>
                 <div class="click-arrow arrow-right" v-if="PageStatus.FiveStar<Math.ceil(LessonRank.five_star.length/5)&&EnterStatus.FiveStatus" @click="PageStatus.FiveStar++"><i class="el-icon-arrow-right" ></i></div>
@@ -67,396 +67,18 @@
 </template>
 
 <script>
+import request from '../api/index'
+const PostRankHot= request.PostRankHot;
+const PostRankNew= request.PostRankNew;
+const PostRankStar= request.PostRankStar;
 export default {
     name:"LessonRank",
     data(){
         return{
             LessonRank:{
-                hot_rank:[
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                    {
-                        img:require("../assets/lessonrank/hot-rank/python.png"),
-                        object:"Python语言程序设计",
-                        src:"北京理工大学",
-                        hot:195132
-                    },
-                ],
-                newlesson_rank:[
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                    {
-                        img:require("../assets/lessonrank/new-rank/go-to-heart.jpg"),
-                        object:"走进心理学",
-                        src:"西南交通大学",
-                        hot:7643
-                    },
-                ],
-                five_star:[
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    },
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    },
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    },
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    },
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    },
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    },
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    },
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    },
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    },
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    },
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    },
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    },
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    },
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    },
-                    {
-                        img:require("../assets/lessonrank/five-star/teacher-virtue.jpg"),
-                        object:"教师职业道德",
-                        src:"成都大学",
-                        hot:10588
-                    }
-                    
-                ]
+                hot_rank:[],
+                newlesson_rank:[],
+                five_star:[]
             },
             PageStatus:{
                 HotRank:1,
@@ -469,6 +91,41 @@ export default {
                 FiveStatus:false
             }
         }
+    },
+    methods:{
+        ImgUrlTrans(url){
+            return url.replace("http://47.93.63.232:3002/images",'/static/self_img');
+        },
+    },
+    mounted(){
+        PostRankHot()
+            .then(res=>{
+                if(res.data.code==1){
+                    this.LessonRank.hot_rank=(res.data.list.sort(function(a,b){return b.courseInfo[0].hot-a.courseInfo[0].hot;}));
+                    console.log(this.LessonRank);
+                }
+            }).catch(e=>{
+                console.log("lessrank-mounted-PostRankHot-catch-error:");
+                console.log(e);
+            }),
+        PostRankNew()
+            .then(res=>{
+                if(res.data.code==1){
+                    this.LessonRank.newlesson_rank=res.data.list;
+                }
+            }).catch(e=>{
+                console.log("lessrank-mounted-PostRankNew-catch-error:");
+                console.log(e);
+            }),
+        PostRankStar()
+            .then(res=>{
+                if(res.data.code==1){
+                    this.LessonRank.five_star=res.data.list;
+                }
+            }).catch(e=>{
+                console.log("lessrank-mounted-PostRankStar-catch-error:");
+                console.log(e);
+            })
     }
 }
 </script>
@@ -545,6 +202,9 @@ export default {
         font-weight: 500;
         color: rgba(51,51,51,1);
         padding-left: 14px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
     #lesson-rank .indu-part .src{
         color: #666;

@@ -21,7 +21,7 @@
                                     <div class="indu-less" v-for="(e,i) in lessContainer" :key="i">
                                         <a target="_blank"  
                                             :href="'#/DetailInfo/'+encodeURI(encodeURI(e.name))+'&'+encodeURI(encodeURI(e.school))+'&'+encodeURI(encodeURI(e.id))">
-                                            <div class="leftSide"><img :src="e.img" alt=""></div>
+                                            <div class="leftSide"><img :src="ImgUrlTrans(e.img)" alt=""></div>
                                             <div class="rightSide">
                                                 <div class="courseName" v-html="e.name.replace(new RegExp($route.params.SInfo.split('=')[1],g),searchlabel)"></div>
                                                 <div class="school-teacher">
@@ -73,6 +73,9 @@ export default {
         this.loadLess();
     },
     methods:{
+        ImgUrlTrans(url){
+            return url.replace("http://47.93.63.232:3002/images",'/static/self_img');
+        },
         loadLess(){
             PostHeaderSearch({search:this.$route.params.SInfo.split('=')[1],on:this.on,gjjp:this.gjjp})
             .then(res=>{

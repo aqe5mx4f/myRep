@@ -60,7 +60,7 @@
           <el-col :span="4"><a><img src="../assets/school/heb.png" alt=""></a></el-col>
         </el-row>
 
-        <div id="live-video">
+        <!-- <div id="live-video">
           <div style="width:1200px;overflow:hidden;">
             <div v-if="FrameStatus>1" style="position:absolute;top:calc(54% - 19px);left:-34px;"><i class="el-icon-arrow-left" @click="FrameStatus--"></i></div>
             <p>最近直播</p>
@@ -77,9 +77,9 @@
             </div>
             <div v-if="FrameStatus<LiveVideo.frame.length" style="position:absolute;top:calc(54% - 19px);right:-34px;"><i class="el-icon-arrow-right" @click="FrameStatus++"></i></div>
           </div>
-        </div>
+        </div> -->
 
-        <div id="edit-reco">
+        <!-- <div id="edit-reco">
           <div style="width:1200px;overflow:hidden;">
             <div v-if="RecoStatus>1" style="position:absolute;top:calc(54% - 19px);left:-34px;"><i class="el-icon-arrow-left" @click="RecoStatus--"></i></div>
             <p>编辑推荐</p>
@@ -94,7 +94,7 @@
             </div>
             <div v-if="RecoStatus<EditReco.frame.length" style="position:absolute;top:calc(54% - 19px);right:-34px;"><i class="el-icon-arrow-right" @click="RecoStatus++"></i></div>
           </div>
-        </div>
+        </div> -->
 
         <LessonRank></LessonRank>
       </el-main>
@@ -538,7 +538,7 @@ ul.in-out a:hover{
 }
 .el-row.asso-uni{
   background-color: rgba(255,255,255,1);
-  margin:18px auto 0;
+  margin:18px auto 18px;
 }
 .el-row.asso-uni .el-col-4{
   height:60px;

@@ -33,7 +33,7 @@
               <input type="text" autocomplete="off" v-model="input" placeholder="请输入课程,id或学校" class="el-input__inner" style="border-radius:24px;">
               <i class="el-input__icon el-icon-search" style="height: 39px; color:#409eff;border-radius: 24px; width: 70px;font-size: 24px;position:absolute;top:10.5px;right:0px;"></i>
               <div class="searchOutCome" v-if="searchShow" style="margin-top:-10px;font-size:12px;width:160px;margin-left:20px;">
-                <div class="fullOutcome" v-if="searchOutCome" style="position:relative;z-index:999;border:1px solid #d5d5d5;background:#f5f5f5;">
+                <div class="fullOutcome" v-if="searchOutCome" @mouseleave="searchShow=false">
                   <div class="clue">请选择或继续输入...</div>
                   <div class="OutCome">
                     <div v-if="searchOutCome.length>1">
@@ -54,7 +54,7 @@
             <span v-if="iflogin" style="float:left;line-height:60px;">个人中心</span>
             <el-dropdown v-if="iflogin" trigger="hover" style="float:right;margin-top:calc(30px - 31px/2)">
               <span class="el-dropdown-link">
-                <el-avatar shape="square" size="small" fit="cover" :src="userInfo.photo"></el-avatar>
+                <el-avatar shape="square" size="small" fit="cover" :src="ImgUrlTrans(userInfo.photo)"></el-avatar>
                 <i class="el-icon-arrow-down el-icon--right" style="vertical-align:super;"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
@@ -139,6 +139,9 @@ export default {
       }
     },
     methods:{
+      ImgUrlTrans(url){
+            return url.replace("http://47.93.63.232:3002/images",'/static/self_img/userimg');
+      },
         ...mapMutations(['loadInfo','toggleLogin']),
         handleClose(done) {
             this.handleCloseStatus=!this.handleCloseStatus;
@@ -217,6 +220,12 @@ export default {
 #menu-content li:hover{
   background-color:rgba(0, 199, 88, 0.1);
   color:rgb(0, 199, 88);
+}
+.searchOutCome>div{
+  position:relative;
+  z-index:999;
+  border:1px solid #d5d5d5;
+  background:#f5f5f5;
 }
 .searchOutCome .clue{
   overflow: hidden;
