@@ -2,23 +2,23 @@
     <div id="Channel-All-Less">
         <div style="width:1200px;overflow:hidden;">
             <div></div>
-            <p>全部课程<span v-if="LessonContainer.total==0" style="color:#f45d44;font-size:16px;">(暂无)</span></p>
+            <p>全部课程<span v-if="Total==0" style="color:#f45d44;font-size:16px;">(暂无)</span></p>
             <div class="LessFilter" style="width:100%;">
                 <div class="LeftFilter">
-                    <span @click="sfilter.state=0;changeFilter()" :class="{active:sfilter.state==0}">全部({{LessonContainer.total}})</span>
-                    <span @click="sfilter.state=1;changeFilter()" :class="{active:sfilter.state==1}">正在进行</span>
-                    <span @click="sfilter.state=2;changeFilter()" :class="{active:sfilter.state==2}">即将开始</span>
-                    <span @click="sfilter.state=3;changeFilter()" :class="{active:sfilter.state==3}">已结束</span>
+                    <span @click="filter.state=0;changeFilter()" :class="{active:filter.state==0}">全部({{Total}})</span>
+                    <span @click="filter.state=1;changeFilter()" :class="{active:filter.state==1}">正在进行</span>
+                    <span @click="filter.state=2;changeFilter()" :class="{active:filter.state==2}">即将开始</span>
+                    <span @click="filter.state=3;changeFilter()" :class="{active:filter.state==3}">已结束</span>
                 </div>
                 <div class="RightFilter">
-                    <span @click="sfilter.cate=0;changeFilter()" :class="{active:sfilter.cate==0}">综合</span>
-                    <span @click="sfilter.cate=1;changeFilter()" :class="{active:sfilter.cate==1}">热门</span>
-                    <span @click="sfilter.cate=2;changeFilter()" :class="{active:sfilter.cate==2}">最新</span>
+                    <span @click="filter.cate=0;changeFilter()" :class="{active:filter.cate==0}">综合</span>
+                    <span @click="filter.cate=1;changeFilter()" :class="{active:filter.cate==1}">热门</span>
+                    <span @click="filter.cate=2;changeFilter()" :class="{active:filter.cate==2}">最新</span>
                 </div>
             </div>
             <div class="show-frame">
                 <div class="view-part">
-                    <a class="indu-part" target="_blank" v-for="(e,i) in LessonContainer.list" :key="i" :href="'#/DetailInfo/'+encodeURI(encodeURI(e.name))+'&'+encodeURI(encodeURI(e.school))+'&'+encodeURI(encodeURI(e.id))" :style="{margin:(i%5==0?'0 0.8% 16px 0':'')||(i%5==4?'0 0 16px 0.8%':'')}">
+                    <a class="indu-part" target="_blank" v-for="(e,i) in LessonContainer" :key="i" :href="'#/DetailInfo/'+encodeURI(encodeURI(e.name))+'&'+encodeURI(encodeURI(e.school))+'&'+encodeURI(encodeURI(e.id))" :style="{margin:(i%5==0?'0 0.8% 16px 0':'')||(i%5==4?'0 0 16px 0.8%':'')}">
                         <div class="img"><img :src="ImgUrlTrans(e.img)"></div>
                         <div class="obj-src"><p><strong>{{e.name}}</strong></p><p>{{e.school}}</p><p style="color:#999;height:23px;line-height:31px;">{{e.courseInfo[e.courseTime-1].main_teacher}}</p></div>
                         <div class="hot-info" v-if="e.courseInfo[e.courseTime-1].state==1"><p style="color:#53B880;"><i class="el-icon-unlock"></i><span>进行至第{{e.courseInfo[e.courseTime-1].progress}}周</span><span>{{e.courseInfo[e.courseTime-1].hot}}人参加</span></p></div>
@@ -28,79 +28,107 @@
                 </div>
             </div>
             <div></div>
-            <div class="block">
+            <div class="block" style="height:60px">
                 <span class="demonstration"></span>
                 <el-pagination
+                    background
                     @size-change="handleSizeChange"
                     @current-change="handleCurrentChange"
-                    :current-page.sync="currentPage"
-                    :page-size="sfilter.Plimit"
-                    layout="prev, pager, next, jumper"
-                    hide-on-single-page="true"
-                    :total="LessonContainer.total">
+                    :current-page="currentPage"
+                    :page-size="10"
+                    :page-sizes="[10,20,50,100]"
+                    layout="prev, pager, next,sizes, jumper"
+                    
+                    :total="Total">
                 </el-pagination>
             </div>
         </div>
     </div>
 </template>
 <script>
+import request from '../api/index'
+const PostChannelFilterLesson = request.PostChannelFilterLesson;
+import {ImgUrl} from '../common/js/api'
 export default {
     name:'ChannelAllLess',
     components:{},
     props:['Data'],
     data(){
         return{
+            hid:[],
             antiState:0,
             antiCate:0,
             currentPage:1,
-            sfilter:{
+            PageSize:10,
+            Total:0,
+            filter:{
                 state:0,
                 cate:0,
                 Pskip:0,
-                Plimit:20
+                Plimit:10
             },
-            LessonContainer:{}
+            LessonContainer:[]
         }
     },
     methods:{
         ImgUrlTrans(url){
-            return url.replace("http://47.93.63.232:3002/images",'/static/self_img');
+            return ImgUrl+url
+        },
+        getLess(hid){
+            this.hid=hid
+            this.currentPage=1
+            this.Total=0
+            this.PageSize=10
+            this.filter={state:0,cate:0,Pskip:0,Plimit:10}
+            PostChannelFilterLesson([this.hid,this.filter])
+                .then(res=>{
+                    console.log(res.data);
+                    this.LessonContainer=res.data.data.list;
+                    this.Total=res.data.data.total
+                }).catch(e=>{console.log('Channel-methods-getAllLess-PostChannelFilterLesson:'+e);})
+        },
+        getLessMore(){
+            PostChannelFilterLesson([this.hid,this.filter])
+                .then(res=>{
+                    console.log(res.data);
+                    this.LessonContainer=res.data.data.list;
+                    this.Total=res.data.data.total
+                }).catch(e=>{console.log('Channel-methods-getAllLess-PostChannelFilterLesson:'+e);})
         },
         changeFilter(){
-            console.log("All-Less--methods-changeFilter()");
-            console.log(this.antiState,this.sfilter.state);
-            console.log(this.antiCate,this.sfilter.cate);
-            if(!(this.antiState==this.sfilter.state&&this.antiCate==this.sfilter.cate)){
-                
-                this.$emit('changefilter',this.sfilter);
-                this.antiState=this.sfilter.state;
-                this.antiCate=this.sfilter.cate;
+            console.log(this.antiState,this.filter.state);
+            console.log(this.antiCate,this.filter.cate);
+            if(!(this.antiState==this.filter.state&&this.antiCate==this.filter.cate)){
+                this.antiState=this.filter.state;
+                this.antiCate=this.filter.cate;
             }
+            this.getLessMore()
         },
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
+            this.currentPage=1
+            this.filter.Plimit=val;
+            this.filter.Pskip=0
+            this.getLessMore()
         },
         handleCurrentChange(val) {
-            this.sfilter.Pskip=val-1;
-            console.log("All-Less--methods-handleCurrentChange-getFilter():before");
-            this.$emit('changefilter',this.sfilter);
-            console.log("All-Less--methods-handleCurrentChange-getFilter():after");
+            if(val-1!==this.filter.Pskip){
+                this.currentPage=val
+                this.filter.Pskip=val-1;
+                this.getLessMore()
+            }
         }
     },
     created(){
-        console.log("All-Less--created().Data");
-        console.log(this.Data);
     },
     mounted(){
-        console.log("All-Less--mounted().Data");
-        console.log(this.Data);
     },
     watch:{
         Data(newVal,oldVal){
             this.LessonContainer=this.Data;
         },
-        sfilter(newVal,oldVal){
-            console.log("sfilter changed");
+        filter(newVal,oldVal){
+            console.log("filter changed");
         }
     }
 }

@@ -40,6 +40,11 @@ export default new Vuex.Store({
                     console.log(state.emit_detailInfo_getLessInfo);
                     console.log(state.userInfo);
                 }).catch(e => { console.log("store-mutations-updateInfo--error" + e) });
+        },
+        cancelInfo(state) {
+            state.userInfo = {}
+            state.iflogin = false
+            console.log("Mutations-cancelInfo()-success");
         }
     },
     actions: {},

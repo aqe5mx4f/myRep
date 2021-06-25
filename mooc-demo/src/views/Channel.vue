@@ -30,7 +30,8 @@
                     <ChannelAdv></ChannelAdv>
                 </div> -->
                 <div class="channel-all-less">
-                    <ChannelAllLess :Data="channelAllLess" @changefilter="getAllFilter"></ChannelAllLess>
+                    <ChannelAllLess ref="ChannelAllLess"></ChannelAllLess>
+                    <!-- :Data="channelAllLess" @changefilter="getAllFilter" -->
                 </div>
             </el-main>
         </el-container>
@@ -76,26 +77,26 @@ export default {
         }
     },
     methods:{
-        getAllLess(){
-            PostChannelFilterLesson([this.hid,this.filter])
-                .then(res=>{
-                    console.log(res.data);
-                    this.channelAllLess=res.data.data;
-                }).catch(e=>{console.log('Channel-methods-getAllLess-PostChannelFilterLesson:'+e);})
-        },
         changeSchannel(){
             this.filter={state:0,cate:0,Pskip:0,Plimit:20};
             console.log("channel-methods-changeSchannel:before");
-            this.getAllLess();
+            this.$nextTick(()=>{
+                this.$refs.ChannelAllLess.getLess(this.hid)
+            })
             console.log("channel-methods-changeSchannel:after");
         },
-        getAllFilter(params){
-            this.filter=params;
-            console.log("channel-methods-getAllFilter()");
-            console.log(this.filter);
-            console.log(this.hid);
-            this.getAllLess();
-        },
+        GetChannelTab(){
+            PostChannelTab(this.hid)
+            .then(res=>{
+                this.object=res.data.data;
+                this.tabIndex=this.hid[1];
+                this.$nextTick(()=>{
+                    this.$refs.ChannelAllLess.getLess(this.hid)
+                })
+            }).catch(e=>{
+                console.log(e);
+            });
+        }
     },
     created(){
         this.hid=this.$route.params.hid;
@@ -104,22 +105,13 @@ export default {
         console.log("Channel--created()");
         console.log(this.hid);
         PostChannelNewBest(this.hid)
-            .then(res=>{
-                console.log('channel-created()');
-                console.log(res.data.data);
-                this.channelBestData=res.data.data;
-            }).catch(e=>{console.log(e);})
-        
-    },
-    mounted(){
-        PostChannelTab(this.hid)
-            .then(res=>{
-                this.object=res.data.data;
-                this.tabIndex=this.hid[1];
-            }).catch(e=>{
-                console.log(e);
-            });
-        this.getAllLess();
+        .then(res=>{
+            console.log('channel-created()');
+            console.log(res.data.data);
+            this.channelBestData=res.data.data;
+        }).catch(e=>{console.log(e);})
+
+        this.GetChannelTab()
     }
 }
 </script>

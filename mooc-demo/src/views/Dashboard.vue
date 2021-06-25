@@ -108,6 +108,7 @@ import Header from '../components/Header'
 import request from '../api/index'
 import {mapMutations,mapState} from 'vuex';
 const PostChannelAll = request.PostChannelAll;
+import { ImgUrl } from '../common/js/api'
 export default {
   name: 'Dashboard',
   components:{

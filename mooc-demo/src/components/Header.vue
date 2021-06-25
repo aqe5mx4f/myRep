@@ -31,7 +31,7 @@
           <el-col :span="4" :offset="1">
             <div class="grid-content bg-purple-light" style="line-height:60px;position:relative;">
               <input type="text" autocomplete="off" v-model="input" placeholder="请输入课程,id或学校" class="el-input__inner" style="border-radius:24px;">
-              <i class="el-input__icon el-icon-search" style="height: 39px; color:#409eff;border-radius: 24px; width: 70px;font-size: 24px;position:absolute;top:10.5px;right:0px;"></i>
+              <i class="el-input__icon el-icon-search" @click="SearchCome" style="height: 39px; color:#409eff;border-radius: 24px; width: 70px;font-size: 24px;position:absolute;top:10.5px;right:0px;"></i>
               <div class="searchOutCome" v-if="searchShow" style="margin-top:-10px;font-size:12px;width:160px;margin-left:20px;">
                 <div class="fullOutcome" v-if="searchOutCome" @mouseleave="searchShow=false">
                   <div class="clue">请选择或继续输入...</div>
@@ -54,7 +54,7 @@
             <span v-if="iflogin" style="float:left;line-height:60px;">个人中心</span>
             <el-dropdown v-if="iflogin" trigger="hover" style="float:right;margin-top:calc(30px - 31px/2)">
               <span class="el-dropdown-link">
-                <el-avatar shape="square" size="small" fit="cover" :src="ImgUrlTrans(userInfo.photo)"></el-avatar>
+                <el-avatar shape="square" size="small" fit="cover" :src="userInfo.photo"></el-avatar>
                 <i class="el-icon-arrow-down el-icon--right" style="vertical-align:super;"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
@@ -62,14 +62,15 @@
                 <el-dropdown-item>我的认证证书</el-dropdown-item>
                 <el-dropdown-item>我的优惠券</el-dropdown-item>
                 <el-dropdown-item>设置</el-dropdown-item>
-                <el-dropdown-item divided>退出</el-dropdown-item>
+                <el-dropdown-item divided >
+                  <div @click="Logout">退出</div></el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
             <span v-if="!iflogin" @click="dialogVisible=true" class="Reg-Log" style="float:right;line-height:60px;">登录&nbsp|&nbsp注册</span>
             <el-dialog
             :visible.sync="dialogVisible"
             lock-scroll="true"
-            width="30%"
+            width="35%"
             :before-close="handleClose">
               <LoginRegister @close-dia="closeDia(status)" @judgeLogin="judgelogin" :closeClick="handleCloseStatus"></LoginRegister>
               
@@ -86,6 +87,7 @@ import {mapMutations,mapState} from 'vuex';
 const PostGetSession = request.PostGetSession;
 const PostHeaderCourse = request.PostHeaderCourse;
 const PostHeaderSearch = request.PostHeaderSearch;
+const PostLogout = request.PostLogout;
 export default {
     name:'Header',
     components:{
@@ -140,9 +142,9 @@ export default {
     },
     methods:{
       ImgUrlTrans(url){
-            return url.replace("http://47.93.63.232:3002/images",'/static/self_img/userimg');
+            return url.replace("http://localhost:3002/images",'/user/self_img/userimg');
       },
-        ...mapMutations(['loadInfo','toggleLogin']),
+        ...mapMutations(['loadInfo','toggleLogin','cancelInfo']),
         handleClose(done) {
             this.handleCloseStatus=!this.handleCloseStatus;
             this.toggleLogin(false);
@@ -151,6 +153,44 @@ export default {
         closeDia(status){
             this.dialogVisible=status;
             this.toggleLogin(false);
+        },
+        SearchCome(){
+          var thisVue=this;
+          var Val=this.input
+          window.clearTimeout(this.searchTimeOut);
+          this.searchTimeOut=setTimeout(function(){
+            if(!Val==''){
+              PostHeaderSearch({search:Val,on:3,gjjp:0})
+                .then(res=>{
+                  thisVue.searchShow=true;
+                  if(res.data.code==1){
+                    console.log(res.data.data);
+                    thisVue.searchOutCome=res.data.data;
+                  };
+                  if(res.data.code==0){
+                    thisVue.searchOutCome=0;
+                  };
+                }).catch(e=>{
+                  console.log("Header-watch-input-PostHeaderSearch-catch--e:");
+                  console.log(e);
+                })
+            }
+          },1000)
+        },
+        Logout(){
+          console.log('logout')
+          PostLogout({id:this.userInfo._id})
+          .then(res=>{
+            if(res.data.code==1){
+              this.$message.success('退出登录成功')
+              this.cancelInfo()
+            }else{
+              this.$message.error(res.data.msg)
+            }
+          }).catch(e=>{
+            console.log("Header-watch-input-PostHeaderSearch-catch--e:");
+            console.log(e);
+          })
         }
         // judgelogin(data){
         //     if(data.LoginStatus){
@@ -167,28 +207,8 @@ export default {
         }
       },
       input:function(Val,oldVal){
-        var thisVue=this;
-        window.clearTimeout(this.searchTimeOut);
-        this.searchTimeOut=setTimeout(function(){
-          if(!Val==''){
-            PostHeaderSearch({search:Val,on:3,gjjp:0})
-              .then(res=>{
-                thisVue.searchShow=true;
-                if(res.data.code==1){
-                  console.log(res.data.data);
-                  thisVue.searchOutCome=res.data.data;
-                };
-                if(res.data.code==0){
-                  thisVue.searchOutCome=0;
-                };
-              }).catch(e=>{
-                console.log("Header-watch-input-PostHeaderSearch-catch--e:");
-                console.log(e);
-              })
-          }
-        },1000)       
+        this.SearchCome()
       }
-      
     }
 }
 </script>

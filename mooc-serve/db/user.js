@@ -5,7 +5,8 @@ let userSchema = new mongoose.Schema({
     user: { type: String, required: true },
     pwd: { type: String, required: true },
     regDate: { type: Number, default: Date.now },
-    photo: { type: String, default: "http://47.93.63.232:3002/images/default.png" },
+    // photo: { type: String, default: "http://localhost:3002/images/user/default.png" },
+    photo: { type: String, default: "http://101.34.36.208:3002/images/user/default.png" },
     praisedComment: { type: Array, default: [] },
     enterLesson: [{ type: mongoose.Schema.Types.ObjectId, ref: 'lesson', required: true }]
 });

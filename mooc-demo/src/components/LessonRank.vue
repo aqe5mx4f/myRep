@@ -71,6 +71,7 @@ import request from '../api/index'
 const PostRankHot= request.PostRankHot;
 const PostRankNew= request.PostRankNew;
 const PostRankStar= request.PostRankStar;
+import {ImgUrl} from '../common/js/api'
 export default {
     name:"LessonRank",
     data(){
@@ -92,9 +93,12 @@ export default {
             }
         }
     },
+    created(){
+        console.log(ImgUrl)
+    },
     methods:{
         ImgUrlTrans(url){
-            return url.replace("http://47.93.63.232:3002/images",'/static/self_img');
+            return ImgUrl+url
         },
     },
     mounted(){
@@ -211,6 +215,10 @@ export default {
         text-align: left;
         padding: 3px 0 0 14px;
         line-height: 23px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        width: 150px;
     }
     #lesson-rank .indu-part .hot{
         color: #999;

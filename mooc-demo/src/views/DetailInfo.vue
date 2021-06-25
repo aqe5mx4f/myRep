@@ -250,6 +250,7 @@ const PostJoinLess = request.PostJoinLess;
 const PostComComment = request.PostComComent;
 const PostgetComment = request.PostgetComent;
 const PostgiveThumbsUp = request.PostgiveThumbsUp;
+import {ImgUrl} from '../common/js/api'
 export default {
     name:'DetailInfo',
     components:{
@@ -292,10 +293,10 @@ export default {
     },
     methods:{
         PhotoUrlTrans(url){
-            return url.replace("http://47.93.63.232:3002/images",'/static/self_img/userimg');
+            return url
       },
         ImgUrlTrans(url){
-            return url.replace("http://47.93.63.232:3002/images",'/static/self_img');
+            return ImgUrl+url
         },
         ...mapMutations(['toggleLogin','updateInfo']),
         handleClose(done) {
@@ -424,7 +425,7 @@ export default {
             console.log("praised:",praised);
             console.log("admiration:",admiration);
             console.log(this.$store.state.userInfo);
-            if(this.$store.state.userInfo.ifLogin==undefined || this.$store.state.userInfo.ifLogin==null){
+            if(this.$store.state.userInfo.user==undefined || this.$store.state.userInfo.user==null){
                 this.$store.state.toLogin=true;
                 return;
             }

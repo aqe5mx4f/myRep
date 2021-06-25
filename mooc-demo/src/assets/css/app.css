@@ -205,7 +205,7 @@ a.indu-part:hover {
 
 .obj-src {
     text-align: left;
-    text-indent: 1em;
+    padding-left: 1em;
 }
 
 .obj-src>p:first-child {

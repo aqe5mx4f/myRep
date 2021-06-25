@@ -1,6 +1,6 @@
 import axios from 'axios';
-
-axios.defaults.baseURL = 'http://47.93.63.232:3002';
+// axios.defaults.baseURL = 'http://localhost:3002';
+axios.defaults.baseURL = 'http://101.34.36.208:3002';
 axios.defaults.withCredentials = true;
 axios.defaults.headers.post["Content-Type"] = 'application/x-www-from-urlcoded';
 
@@ -10,6 +10,9 @@ export default {
     },
     postLogin(options) {
         return axios.post('/login', options);
+    },
+    PostLogout(options) {
+        return axios.post('/login/logout', options);
     },
     PostUpdateInfo(options) {
         return axios.post('/login/updateInfo', options);
@@ -59,5 +62,4 @@ export default {
     PostgiveThumbsUp(options) {
         return axios.post('/detail/comment/thumbsUp', options);
     }
-
 }

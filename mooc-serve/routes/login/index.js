@@ -95,7 +95,7 @@ router.post("/getSession", (req, res) => {
     }
 });
 //退出登录
-router.post('/Logout', (req, res) => {
+router.post('/logout', (req, res) => {
     req.session.destroy();
     res.send({
         code: 1,

@@ -52,6 +52,7 @@
 import Header from '../components/Header'
 import request from '../api/index';
 const PostHeaderSearch = request.PostHeaderSearch;
+import {ImgUrl} from '../common/js/api'
 export default {
     name:'Search',
     components:{
@@ -74,7 +75,7 @@ export default {
     },
     methods:{
         ImgUrlTrans(url){
-            return url.replace("http://47.93.63.232:3002/images",'/static/self_img');
+            return ImgUrl+url
         },
         loadLess(){
             PostHeaderSearch({search:this.$route.params.SInfo.split('=')[1],on:this.on,gjjp:this.gjjp})

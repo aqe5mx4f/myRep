@@ -69,7 +69,7 @@ router.post('/', (req, res) => {
 
     function createDatabase() {
         var toStr = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
-        var url = "http://47.93.63.232:3002/images/lesson/";
+        var url = "/images/lesson/";
         var toCate = [{
                 pCate: '国家精品',
                 sCate: ["计算机", "理学", "工学", "经济管理", "文史哲", "艺术设计", "心理学", "医药卫生", "法学", "教育教学", "农林园艺"]

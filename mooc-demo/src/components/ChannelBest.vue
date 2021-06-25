@@ -6,7 +6,7 @@
             <div class="show-frame" :style="{width:ChannelBest.frame.length*1200+'px',transform:'translateX('+(1-IndexStatus)*1200+'px)'}">
               <div class="view-part" v-for="(a,b) in ChannelBest.frame" :key="b">
                 <div class="indu-part" v-for="(e,i) in a" :key="i">
-                  <div class="img"><img :src="e.img"></div>
+                  <div class="img"><img :src="ImgUrlTrans(e.img)"></div>
                   <div class="obj-src"><p><strong>{{e.name}}</strong></p><p>{{e.school}}</p><p style="color:#999;height:23px;line-height:31px;">{{e.teacher}}</p></div>
                   <div class="hot-info"><p><span>进行至第{{e.progress}}周</span><span>{{e.hot}}人参加</span></p></div>
                 </div>
@@ -17,6 +17,7 @@
     </div>
 </template>
 <script>
+// import {ImgUrl} from '../common/js/api'
 export default {
     name:'ChannelBest',
     components:{},
@@ -38,6 +39,11 @@ export default {
     },
     mounted(){
       console.log("channelBest--mounted");
+    },
+    methods:{
+      ImgUrlTrans(url){
+            return url
+      },
     },
     watch:{
       Data(newVal,oldVal){
