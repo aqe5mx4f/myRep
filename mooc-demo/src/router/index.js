@@ -12,6 +12,12 @@ export default new Router({
                 import ('@/views/Dashboard')
         },
         {
+            path: '/test',
+            name: 'test',
+            component: () =>
+                import ('@/views/test')
+        },
+        {
             path: '/Channel/:hid',
             name: 'Channel',
             component: () =>
